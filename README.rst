@@ -15,7 +15,12 @@ Uninstall
 
 From OpenCOR's ``Python Console`` window::
 
+ # Basic uninstallation.
  !pip uninstall -y seir
+
+ # Uninstallation that removes `seir` and its unneeded dependencies.
+ # Note: this requires pip-autoremove to have been pip installed first.
+ !pip-autoremove -y seir
 
 Use
 ---
