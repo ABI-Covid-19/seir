@@ -2,6 +2,7 @@ import os
 from enum import Enum, auto
 
 import matplotlib.pyplot as plt
+import moh_data.main as md
 import numpy as np
 import opencor as oc
 
@@ -53,6 +54,7 @@ class Model:
     def __init__(self):
         # Create (i.e. open) our SEIR simulation.
 
+        self.__data = md.Basic()
         self.__simulation = oc.open_simulation(os.path.dirname(__file__) + '/models/seir.sedml')
 
         # Initialise (i.e. reset) our simulation.
@@ -119,6 +121,10 @@ class Model:
             # Run the simulation one day at a time.
 
             self.__simulation.data().set_ending_point(1 if sim_duration >= 1 else sim_duration)
+
+            print('---[Day #', run_nb, ']---', sep='')
+            print('Number of confirmed cases: ', self.__data.get_cumulative_confirmed_cases_on_day(run_nb), sep='')
+            print('Number of probable cases: ', self.__data.get_cumulative_probable_cases_on_day(run_nb), sep='')
 
             self.__simulation.run()
 
