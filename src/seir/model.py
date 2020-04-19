@@ -70,24 +70,25 @@ class Model:
 
         # Keep track of various model parameters.
 
-        self.__results = self.__simulation.results()
-        self.__states = self.__results.states()
-        self.__algebraic = self.__results.algebraic()
+        results = self.__simulation.results()
 
-        self.__voi = self.Parameter(self.Parameter.Kind.VOI, self.__results.voi())
+        states = results.states()
+        algebraic = results.algebraic()
 
-        self.__s = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/S'])
-        self.__e = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/E'])
-        self.__i_c = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/I_c'])
-        self.__i_p = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/I_p'])
-        self.__i_u = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/I_u'])
-        self.__r_c = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/R_c'])
-        self.__r_u = self.Parameter(self.Parameter.Kind.STATE, self.__states['main/R_u'])
+        self.__voi = self.Parameter(self.Parameter.Kind.VOI, results.voi())
 
-        self.__i = self.Parameter(self.Parameter.Kind.ALGEBRAIC, self.__algebraic['main/I'])
-        self.__r = self.Parameter(self.Parameter.Kind.ALGEBRAIC, self.__algebraic['main/R'])
-        self.__d = self.Parameter(self.Parameter.Kind.ALGEBRAIC, self.__algebraic['main/D'])
-        self.__ifr = self.Parameter(self.Parameter.Kind.ALGEBRAIC, self.__algebraic['main/IFR'])
+        self.__s = self.Parameter(self.Parameter.Kind.STATE, states['main/S'])
+        self.__e = self.Parameter(self.Parameter.Kind.STATE, states['main/E'])
+        self.__i_c = self.Parameter(self.Parameter.Kind.STATE, states['main/I_c'])
+        self.__i_p = self.Parameter(self.Parameter.Kind.STATE, states['main/I_p'])
+        self.__i_u = self.Parameter(self.Parameter.Kind.STATE, states['main/I_u'])
+        self.__r_c = self.Parameter(self.Parameter.Kind.STATE, states['main/R_c'])
+        self.__r_u = self.Parameter(self.Parameter.Kind.STATE, states['main/R_u'])
+
+        self.__i = self.Parameter(self.Parameter.Kind.ALGEBRAIC, algebraic['main/I'])
+        self.__r = self.Parameter(self.Parameter.Kind.ALGEBRAIC, algebraic['main/R'])
+        self.__d = self.Parameter(self.Parameter.Kind.ALGEBRAIC, algebraic['main/D'])
+        self.__ifr = self.Parameter(self.Parameter.Kind.ALGEBRAIC, algebraic['main/IFR'])
 
         self.parameters = {
             self.__voi.name(): self.__voi,
