@@ -115,25 +115,21 @@ class Model:
 
         # Run our SEIR simulation.
 
-        run_nb = 0
-
-        while sim_duration > 0:
+        for i in range(sim_duration):
             # Run the simulation one day at a time.
 
             self.__simulation.data().set_ending_point(1 if sim_duration >= 1 else sim_duration)
 
-            print('---[Day #', run_nb, ']---', sep='')
-            print('Number of confirmed cases: ', self.__data.get_cumulative_confirmed_cases_on_day(run_nb), sep='')
-            print('Number of probable cases: ', self.__data.get_cumulative_probable_cases_on_day(run_nb), sep='')
+            print('---[Day #', i, ']---', sep='')
+            print('Number of confirmed cases: ', self.__data.get_cumulative_confirmed_cases_on_day(i), sep='')
+            print('Number of probable cases: ', self.__data.get_cumulative_probable_cases_on_day(i), sep='')
 
             self.__simulation.run()
-
-            sim_duration -= 1
 
             # Update our simulation results using the results of the current
             # simulation.
 
-            self.__voi._Parameter__append_values(run_nb + self.__voi._Parameter__parameter.values())
+            self.__voi._Parameter__append_values(i + self.__voi._Parameter__parameter.values())
             self.__s._Parameter__append_values(self.__s._Parameter__parameter.values())
             self.__e._Parameter__append_values(self.__e._Parameter__parameter.values())
             self.__i_c._Parameter__append_values(self.__i_c._Parameter__parameter.values())
@@ -145,8 +141,6 @@ class Model:
             self.__r._Parameter__append_values(self.__r._Parameter__parameter.values())
             self.__d._Parameter__append_values(self.__d._Parameter__parameter.values())
             self.__ifr._Parameter__append_values(self.__ifr._Parameter__parameter.values())
-
-            run_nb += 1
 
     def plot(self):
         # Plot the results.
