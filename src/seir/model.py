@@ -6,6 +6,9 @@ import moh_data.main as md
 import numpy as np
 import opencor as oc
 
+MOH_DATA = md.Basic()
+NZ_POPULATION = 5000000
+
 
 class Model:
     """
@@ -51,10 +54,10 @@ class Model:
 
             self.__values = np.append(self.__values, values)
 
-    def __init__(self):
+    def __init__(self, use_moh_data=True):
         # Create (i.e. open) our SEIR simulation.
 
-        self.__data = md.Basic()
+        self.__use_moh_data = use_moh_data
         self.__simulation = oc.open_simulation(os.path.dirname(__file__) + '/models/seir.sedml')
 
         # Initialise (i.e. reset) our simulation.
@@ -70,8 +73,10 @@ class Model:
 
         # Keep track of various model parameters.
 
-        results = self.__simulation.results()
+        data = self.__simulation.data()
+        self.__data_states = data.states()
 
+        results = self.__simulation.results()
         states = results.states()
         algebraic = results.algebraic()
 
@@ -120,10 +125,6 @@ class Model:
 
             self.__simulation.data().set_ending_point(1 if sim_duration >= 1 else sim_duration)
 
-            print('---[Day #', i, ']---', sep='')
-            print('Number of confirmed cases: ', self.__data.get_cumulative_confirmed_cases_on_day(i), sep='')
-            print('Number of probable cases: ', self.__data.get_cumulative_probable_cases_on_day(i), sep='')
-
             self.__simulation.run()
 
             # Update our simulation results using the results of the current
@@ -141,6 +142,15 @@ class Model:
             self.__r._Parameter__append_values(self.__r._Parameter__parameter.values())
             self.__d._Parameter__append_values(self.__d._Parameter__parameter.values())
             self.__ifr._Parameter__append_values(self.__ifr._Parameter__parameter.values())
+
+            # Update some of our model parameters using data from the MoH.
+
+            if self.__use_moh_data:
+                try:
+                    self.__data_states['main/I_c'] = MOH_DATA.get_cumulative_confirmed_cases_on_day(i) / NZ_POPULATION
+                    self.__data_states['main/I_u'] = MOH_DATA.get_cumulative_probable_cases_on_day(i) / NZ_POPULATION
+                except:
+                    pass
 
     def plot(self):
         # Plot the results.
