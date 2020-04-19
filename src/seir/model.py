@@ -121,6 +121,15 @@ class Model:
         # Run our SEIR simulation.
 
         for i in range(sim_duration):
+            # Update some of our model parameters using data from the MoH.
+
+            if self.__use_moh_data:
+                try:
+                    self.__data_states['main/I_c'] = MOH_DATA.get_cumulative_confirmed_cases_on_day(i) / NZ_POPULATION
+                    self.__data_states['main/I_u'] = MOH_DATA.get_cumulative_probable_cases_on_day(i) / NZ_POPULATION
+                except:
+                    pass
+
             # Run the simulation one day at a time.
 
             self.__simulation.data().set_ending_point(1 if sim_duration >= 1 else sim_duration)
@@ -142,15 +151,6 @@ class Model:
             self.__r._Parameter__append_values(self.__r._Parameter__parameter.values())
             self.__d._Parameter__append_values(self.__d._Parameter__parameter.values())
             self.__ifr._Parameter__append_values(self.__ifr._Parameter__parameter.values())
-
-            # Update some of our model parameters using data from the MoH.
-
-            if self.__use_moh_data:
-                try:
-                    self.__data_states['main/I_c'] = MOH_DATA.get_cumulative_confirmed_cases_on_day(i) / NZ_POPULATION
-                    self.__data_states['main/I_u'] = MOH_DATA.get_cumulative_probable_cases_on_day(i) / NZ_POPULATION
-                except:
-                    pass
 
     def plot(self):
         # Plot the results.
