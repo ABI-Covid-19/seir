@@ -130,8 +130,10 @@ class Model:
 
             if self.__use_moh_data:
                 try:
-                    self.__data_states['main/I_c'] = Model.__moh_data.get_cumulative_confirmed_cases_on_day(i) / Model.__nz_population
-                    self.__data_states['main/I_u'] = Model.__moh_data.get_cumulative_probable_cases_on_day(i) / Model.__nz_population
+                    self.__data_states['main/I_c'] = Model.__moh_data.get_cumulative_confirmed_cases_on_day(
+                        i) / Model.__nz_population
+                    self.__data_states['main/I_u'] = Model.__moh_data.get_cumulative_probable_cases_on_day(
+                        i) / Model.__nz_population
                 except:
                     pass
 
