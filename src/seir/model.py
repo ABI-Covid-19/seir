@@ -6,15 +6,15 @@ import moh_data.main as md
 import numpy as np
 import opencor as oc
 
-MOH_DATA = md.Basic()
-NZ_POPULATION = 5000000
-
 
 class Model:
     """
     SEIR model of Covid-19, as described at
     https://cpb-ap-se2.wpmucdn.com/blogs.auckland.ac.nz/dist/d/75/files/2017/01/Covid19_SEIR_model.pdf.
     """
+
+    __moh_data = None
+    __nz_population = 5000000
 
     class Parameter:
         """
@@ -55,6 +55,11 @@ class Model:
             self.__values = np.append(self.__values, values)
 
     def __init__(self, use_moh_data=True):
+        # Retrieve some data from the MoH, if needed.
+
+        if use_moh_data and Model.__moh_data == None:
+            Model.__moh_data = md.Basic()
+
         # Create (i.e. open) our SEIR simulation.
 
         self.__use_moh_data = use_moh_data
@@ -125,8 +130,8 @@ class Model:
 
             if self.__use_moh_data:
                 try:
-                    self.__data_states['main/I_c'] = MOH_DATA.get_cumulative_confirmed_cases_on_day(i) / NZ_POPULATION
-                    self.__data_states['main/I_u'] = MOH_DATA.get_cumulative_probable_cases_on_day(i) / NZ_POPULATION
+                    self.__data_states['main/I_c'] = Model.__moh_data.get_cumulative_confirmed_cases_on_day(i) / Model.__nz_population
+                    self.__data_states['main/I_u'] = Model.__moh_data.get_cumulative_probable_cases_on_day(i) / Model.__nz_population
                 except:
                     pass
 
